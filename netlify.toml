@@ -1,0 +1,20 @@
+[build]
+  command = "npm install && npm --prefix frontend install && npm --prefix frontend run build"
+  publish = "frontend/dist"
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+  external_node_modules = ["sharp"]
+
+# Proxy all backend API routes to the serverless function
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
+
+# Fallback for SPA-style routing (not strictly needed here)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
